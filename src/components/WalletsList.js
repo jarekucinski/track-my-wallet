@@ -20,7 +20,7 @@ const WalletsList = ({ onChange }) => {
 
   return (
     <div>
-      <ChipsArray initialData={wallets} type="multi" onChange={handleSelectedChange} />
+      <ChipsArray initialData={wallets} onChange={handleSelectedChange} />
     </div>
   )
 }
