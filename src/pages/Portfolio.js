@@ -1,5 +1,9 @@
 import React from "react";
 import StickyHeadTable from "../components/StickyHeadTable";
+import { getPortfolioView } from "../utils/api";
+import { fetchExchangeRate, fetchStockInfo } from "../utils/stocksApiMock";
+
+const USERS_CURRENCY = 'PLN' 
 
 const columns = [
   { id: 'ticker', label: 'Ticker', minWidth: 80 },
@@ -12,7 +16,7 @@ const columns = [
     format: (value) => value.toFixed(2),
   },
   {
-    id: 'averagePurchasePrice',
+    id: 'averagePrice',
     label: 'Average price',
     minWidth: 80,
     align: 'right',
@@ -48,22 +52,24 @@ const columns = [
   },
 ];
 
-const currencies = {
-  PLN: 1,
-  USD: 4.11,
-  GBP: 5.4328,
-}
-
-function createData(ticker, quantity, currentPrice, currency, averagePurchasePrice) {
+function createRowData(ticker, quantity, currentPrice, currency, averagePrice, currencyConversionRate, averageExchangeRate) {
   const quotation = quantity * currentPrice;
-  const profitLoss = (quantity * currentPrice) / (quantity * averagePurchasePrice);
-  const quotationPLN = quotation * currencies[currency];
+  const profitLoss = (quantity * currentPrice) / (quantity * averagePrice);
+  const quotationPLN = quotation * currencyConversionRate;
+  const profitLossPLN = profitLoss * currencyConversionRate / averageExchangeRate;
 
-  return { ticker, quantity, currentPrice, currency, averagePurchasePrice, quotation, profitLoss, quotationPLN };
+  return { ticker, quantity, currentPrice, currency, averagePrice, quotation, profitLoss, quotationPLN, profitLossPLN };
 }
 
 const Portfolio = props => {
-  const rows = props.stocks.map(item => createData(item.ticker, item.quantity, item.currentPrice, item.currency, item.averagePurchasePrice))
+  const stocks = getPortfolioView()
+  let rows = []
+
+  for (const [ticker, value] of stocks.entries()) {
+    const currentInfo = fetchStockInfo(ticker);
+    const currencyConversionRate = fetchExchangeRate(value.currency, USERS_CURRENCY)
+    rows.push(createRowData(ticker, value.quantity, currentInfo.price, value.currency, value.averagePrice, currencyConversionRate, value.averageExchangeRate))
+  }
 
   return (
     <div>
