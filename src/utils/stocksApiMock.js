@@ -4,13 +4,13 @@ export const fetchStockInfo = (ticker) => {
       return {
         price: 26.92,
         exchange: 'LSE',
-        currency: "GBP",
+        currency: 'GBP',
       }
     case 'SGLN LN ETF':
       return {
         price: 26.16,
         exchange: 'LSE',
-        currency: "GBP",
+        currency: 'GBP',
       }
     case 'ALIBABA GROUP HLDG ADR':
       return {
@@ -19,18 +19,18 @@ export const fetchStockInfo = (ticker) => {
         currency: 'USD',
       }
     default:
-      break;
+      break
   }
 }
 
 export const fetchExchangeRate = (from, to) => {
   switch (from) {
     case 'USD':
-      return 4.08;
-    case 'GBP': 
-      return 5.46;
+      return 4.08
+    case 'GBP':
+      return 5.46
     case 'PLN':
-      return 1;
+      return 1
     default:
       return 1
   }

@@ -10,11 +10,11 @@ const mockedWallets = [
 ]
 
 const WalletsList = ({ onChange }) => {
-  const [wallets, setWallets] = useState(mockedWallets);
-  
-  const handleSelectedChange = selected => {
+  const [wallets, setWallets] = useState(mockedWallets)
+
+  const handleSelectedChange = (selected) => {
     if (onChange) {
-      onChange(selected);
+      onChange(selected)
     }
   }
 

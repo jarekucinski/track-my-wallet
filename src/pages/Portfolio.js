@@ -1,9 +1,9 @@
-import React from "react";
-import StickyHeadTable from "../components/StickyHeadTable";
-import { getPortfolioView } from "../utils/api";
-import { fetchExchangeRate, fetchStockInfo } from "../utils/stocksApiMock";
+import React from 'react'
+import StickyHeadTable from '../components/StickyHeadTable'
+import { getPortfolioView } from '../utils/api'
+import { fetchExchangeRate, fetchStockInfo } from '../utils/stocksApiMock'
 
-const USERS_CURRENCY = 'PLN' 
+const USERS_CURRENCY = 'PLN'
 
 const columns = [
   { id: 'ticker', label: 'Ticker', minWidth: 80 },
@@ -50,34 +50,50 @@ const columns = [
     align: 'right',
     format: (value) => value.toFixed(2),
   },
-];
+]
 
-function createRowData(ticker, quantity, currentPrice, currency, averagePrice, currencyConversionRate, averageExchangeRate) {
-  const quotation = quantity * currentPrice;
-  const profitLoss = (quantity * currentPrice) / (quantity * averagePrice);
-  const quotationPLN = quotation * currencyConversionRate;
-  const profitLossPLN = profitLoss * currencyConversionRate / averageExchangeRate;
+function createRowData(
+  ticker,
+  quantity,
+  currentPrice,
+  currency,
+  averagePrice,
+  currencyConversionRate,
+  averageExchangeRate
+) {
+  const quotation = quantity * currentPrice
+  const profitLoss = (quantity * currentPrice) / (quantity * averagePrice)
+  const quotationPLN = quotation * currencyConversionRate
+  const profitLossPLN = (profitLoss * currencyConversionRate) / averageExchangeRate
 
-  return { ticker, quantity, currentPrice, currency, averagePrice, quotation, profitLoss, quotationPLN, profitLossPLN };
+  return { ticker, quantity, currentPrice, currency, averagePrice, quotation, profitLoss, quotationPLN, profitLossPLN }
 }
 
-const Portfolio = props => {
+const Portfolio = (props) => {
   const stocks = getPortfolioView()
   let rows = []
 
   for (const [ticker, value] of stocks.entries()) {
-    const currentInfo = fetchStockInfo(ticker);
+    const currentInfo = fetchStockInfo(ticker)
     const currencyConversionRate = fetchExchangeRate(value.currency, USERS_CURRENCY)
-    rows.push(createRowData(ticker, value.quantity, currentInfo.price, value.currency, value.averagePrice, currencyConversionRate, value.averageExchangeRate))
+    rows.push(
+      createRowData(
+        ticker,
+        value.quantity,
+        currentInfo.price,
+        value.currency,
+        value.averagePrice,
+        currencyConversionRate,
+        value.averageExchangeRate
+      )
+    )
   }
 
   return (
     <div>
       <StickyHeadTable columns={columns} rows={rows} />
     </div>
-  );
-};
+  )
+}
 
-Portfolio.propTypes = {};
-
-export default Portfolio;
+export default Portfolio
